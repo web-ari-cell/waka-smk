@@ -19,7 +19,7 @@
         /* WORKSPACE IFRAME UNTUK LANDING PAGE */
         .landing-iframe-section {
             padding-top: 20px;
-            background-color: var(--bg-light, #F4F7FC);
+            background-color: #F4F7FC;
             min-height: calc(100vh - 80px);
         }
         .landing-iframe-container {
@@ -47,6 +47,9 @@
             align-items: center;
             z-index: 10;
             transition: opacity 0.3s ease;
+        }
+        .navbar-nav .nav-link {
+            cursor: pointer;
         }
     </style>
 </head>
@@ -76,12 +79,12 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto text-center align-items-center">
-                        <li class="nav-item"><a class="nav-link" href="javascript:void(0)" id="nav-home-link">Home</a></li>
-                        <li class="nav-item"><a class="nav-link smooth-scroll main-elements" href="#sambutan">Profil</a></li>
-                        <li class="nav-item"><a class="nav-link smooth-scroll main-elements" href="#tugas">Program</a></li>
-                        <li class="nav-item"><a class="nav-link active-state" href="javascript:void(0)" id="nav-jadwal-link">Jadwal Pelajaran</a></li>
-                        <li class="nav-item"><a class="nav-link smooth-scroll main-elements" href="#galeri">Galeri</a></li>
-                        <li class="nav-item"><a class="nav-link smooth-scroll main-elements" href="#dokumen">Download</a></li>
+                        <li class="nav-item"><a class="nav-link nav-view-trigger active" data-target="home">Home</a></li>
+                        <li class="nav-item"><a class="nav-link smooth-scroll nav-view-trigger" href="#sambutan" data-target="home">Profil</a></li>
+                        <li class="nav-item"><a class="nav-link smooth-scroll nav-view-trigger" href="#tugas" data-target="home">Program</a></li>
+                        <li class="nav-item"><a class="nav-link nav-view-trigger" id="nav-jadwal-link" data-target="jadwal">Jadwal Pelajaran</a></li>
+                        <li class="nav-item"><a class="nav-link smooth-scroll nav-view-trigger" href="#galeri" data-target="home">Galeri</a></li>
+                        <li class="nav-item"><a class="nav-link smooth-scroll nav-view-trigger" href="#dokumen" data-target="home">Download</a></li>
                         <li class="nav-item"><a class="nav-link btn btn-outline-light btn-sm mx-2 px-3 rounded-pill" href="#login">Login</a></li>
                         <li class="nav-item"><a class="nav-link btn btn-accent btn-sm px-3 rounded-pill text-white" href="javascript:void(0)" id="btn-dashboard">Dashboard</a></li>
                         <li class="nav-item ms-3">
@@ -155,7 +158,7 @@
                                 <h5 class="fw-bold">Jadwal Pelajaran</h5>
                                 <p class="text-muted small">Akses agenda KBM harian, alokasi ruangan kelas, dan jadwal mengajar guru terintegrasi.</p>
                             </div>
-                            <button id="card-jadwal-trigger" class="btn btn-sm btn-outline-primary rounded-pill mt-3 align-self-start">Buka Jadwal <i class="fas fa-arrow-right ms-1"></i></button>
+                            <button class="btn btn-sm btn-outline-primary rounded-pill mt-3 align-self-start card-jadwal-trigger-btn">Buka Jadwal <i class="fas fa-arrow-right ms-1"></i></button>
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="200">
@@ -376,7 +379,7 @@
                     <div class="spinner-border text-primary mb-2" role="status"></div>
                     <span class="text-muted small fw-semibold">Mengamankan Akses Jadwal Pelajaran SMK...</span>
                 </div>
-                <!-- Frame Utama -->
+                <!-- Frame Utama Perlindungan Penuh -->
                 <iframe id="landing-view-frame" src="about:blank" sandbox="allow-forms allow-scripts allow-same-origin allow-popups allow-modals allow-downloads allow-popups-to-escape-sandbox" allow="fullscreen"></iframe>
             </div>
         </div>
@@ -393,7 +396,7 @@
                     <div class="text-center mb-4">
                         <i class="fa-solid fa-shield-halved text-accent display-4 mb-2"></i>
                         <h4 class="fw-bold text-gradient-light">Portal Kurikulum</h4>
-                        <p class="small text-white-50">Silahkan login untuk mengakses Dashboard Akademik</p>
+                        <p class="small text-white-50">Silahkan login untuk accessing Dashboard Akademik</p>
                     </div>
                     <form id="authLoginForm">
                         <div class="mb-3">
@@ -429,33 +432,26 @@
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script src="script.js"></script>
 
-    <!-- NAVIGASI DAN PENGALIHAN VIEW JADWAL INTERNAL -->
+    <!-- ENGINE TABS VIEW & ROUTING ENGINE JADWAL -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const navHomeLink = document.getElementById('nav-home-link');
-            const navJadwalLink = document.getElementById('nav-jadwal-link');
-            const cardJadwalTrigger = document.getElementById('card-jadwal-trigger');
-            
             const mainLandingView = document.getElementById('main-landing-view');
             const landingJadwalView = document.getElementById('landing-jadwal-view');
-            
             const landingViewFrame = document.getElementById('landing-view-frame');
             const landingViewSpinner = document.getElementById('landing-view-spinner');
 
-            function aktifkanJadwalView() {
-                // Sembunyikan Landing Page, Tampilkan Frame Jadwal
+            // Fungsi Inti Membuka Bingkai Jadwal
+            window.showJadwalEngine = function() {
                 mainLandingView.classList.add('d-none');
                 landingJadwalView.classList.remove('d-none');
                 
-                // Set status kelas navigasi aktif
+                // Sinkronisasi status aktif navbar manual
                 document.querySelectorAll('.navbar-nav .nav-link').forEach(el => el.classList.remove('active'));
-                navJadwalLink.classList.add('active');
+                document.getElementById('nav-jadwal-link').classList.add('active');
 
-                // Isi Konten Frame jika masih kosong
                 if(landingViewFrame.src === "about:blank" || landingViewFrame.src === "") {
                     landingViewSpinner.style.opacity = "1";
                     landingViewSpinner.style.display = "flex";
-                    
                     landingViewFrame.src = "https://web-ari-cell.github.io/jadwal_smk/";
                     
                     setTimeout(() => {
@@ -464,36 +460,37 @@
                     }, 1500);
                 }
                 window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
+            };
 
-            function aktifkanHomeView() {
-                // Sembunyikan Frame Jadwal, Tampilkan Kembali Landing Page
+            // Fungsi Kembali ke Tampilan Normal (Homepage)
+            window.showHomeEngine = function() {
                 landingJadwalView.classList.add('d-none');
                 mainLandingView.classList.remove('d-none');
                 
-                navJadwalLink.classList.remove('active');
-                navHomeLink.classList.add('active');
+                document.querySelectorAll('.navbar-nav .nav-link').forEach(el => el.classList.remove('active'));
+                document.querySelector('[data-target="home"]').classList.add('active');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
+            };
 
-            // Aksi Pemicu
-            navJadwalLink.addEventListener('click', aktifkanJadwalView);
-            cardJadwalTrigger.addEventListener('click', aktifkanJadwalView);
-            navHomeLink.addEventListener('click', aktifkanHomeView);
+            // Pasang Listener Klik Independen
+            document.getElementById('nav-jadwal-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                showJadwalEngine();
+            });
 
-            // Mencegah kerusakan link jangkar (scroll) saat dalam mode jadwal
-            document.querySelectorAll('.main-elements').forEach(link => {
-                link.addEventListener('click', function() {
-                    if(!landingJadwalView.classList.contains('d-none')) {
-                        mainLandingView.classList.remove('d-none');
-                        landingJadwalView.classList.add('d-none');
-                        navJadwalLink.classList.remove('active');
+            document.querySelector('.card-jadwal-trigger-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                showJadwalEngine();
+            });
+
+            document.querySelectorAll('.nav-view-trigger').forEach(trigger => {
+                trigger.addEventListener('click', function(e) {
+                    const target = this.getAttribute('data-target');
+                    if(target === 'home') {
+                        showHomeEngine();
                     }
                 });
             });
-            
-            // Set Home default aktif awal
-            navHomeLink.classList.add('active');
         });
     </script>
 </body>
