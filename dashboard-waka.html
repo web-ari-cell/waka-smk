@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Waka Kurikulum - Manajemen Akademik</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0D47A1;
+            --secondary: #1565C0;
+            --accent: #42A5F5;
+            --bg-dashboard: #F4F7FC;
+            --sidebar-width: 260px;
+            --glass-card: rgba(255, 255, 255, 0.85);
+            --shadow-soft: 0 8px 32px 0 rgba(13, 71, 161, 0.05);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dashboard);
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        /* SIDEBAR STYLING */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: linear-gradient(180deg, #0D47A1, #1565C0);
+            color: #fff;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        .sidebar-brand {
+            padding: 24px;
+            font-family: 'Poppins', sans-serif;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .nav-menu {
+            padding: 20px 0;
+            list-style: none;
+        }
+        .nav-item-db a {
+            display: flex;
+            align-items: center;
+            padding: 12px 24px;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .nav-item-db a:hover, .nav-item-db.active a {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid var(--accent);
+        }
+        .nav-item-db a i {
+            width: 25px;
+            margin-right: 10px;
+        }
+
+        /* MAIN CONTENT AREA */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 30px;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        /* GLASS CARD */
+        .db-card {
+            background: var(--glass-card);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 16px;
+            box-shadow: var(--shadow-soft);
+            padding: 24px;
+            transition: transform 0.3s ease;
+        }
+
+        /* IFRAME WORKSPACE CONTAINER */
+        .iframe-container {
+            position: relative;
+            width: 100%;
+            height: calc(100vh - 160px); /* Menghitung sisa tinggi layar */
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
+            background: #fff;
+            border: 1px solid rgba(13, 71, 161, 0.1);
+        }
+        .iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* IFRAME LOADER */
+        .iframe-loader {
+            position: absolute;
+            inset: 0;
+            background: rgba(244, 247, 252, 0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            backdrop-filter: blur(4px);
+            transition: opacity 0.3s ease;
+        }
+
+        /* UTILITIES */
+        .text-gradient {
+            background: linear-gradient(45deg, #0D47A1, #42A5F5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .top-navbar {
+            background: #fff;
+            padding: 15px 30px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 30px;
+        }
+        .badge-approved { background-color: rgba(46, 204, 113, 0.15); color: #2ecc71; }
+        .badge-pending { background-color: rgba(241, 196, 15, 0.15); color: #f1c40f; }
+
+        @media (max-width: 992px) {
+            .sidebar { left: -var(--sidebar-width); }
+            .main-content { margin-left: 0; }
+            .sidebar.active { left: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <h5 class="fw-bold mb-0"><i class="fa-solid fa-graduation-cap me-2"></i>SI-KURIKULUM</h5>
+            <small class="opacity-50">Panel Waka Kurikulum</small>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item-db active" id="menu-overview"><a><i class="fas fa-th-large"></i> Overview</a></li>
+            <li class="nav-item-db" id="menu-jadwal"><a><i class="fas fa-clock"></i> Jadwal Pelajaran</a></li>
+            <li class="nav-item-db"><a><i class="fas fa-calendar-alt"></i> Kalender Akademik</a></li>
+            <li class="nav-item-db"><a><i class="fas fa-book"></i> Perangkat Ajar (ATP/MA)</a></li>
+            <li class="nav-item-db"><a><i class="fas fa-chart-bar"></i> Asesmen & Nilai</a></li>
+            <li class="nav-item-db"><a><i class="fas fa-user-tie"></i> Supervisi Guru</a></li>
+            <li class="nav-item-db mt-5"><a id="btnLogout" class="text-danger"><i class="fas fa-sign-out-alt"></i> Keluar Sistem</a></li>
+        </ul>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        
+        <!-- TOP NAVBAR -->
+        <div class="top-navbar d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <button class="btn btn-light d-lg-none me-3" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+                <h4 class="fw-bold mb-0 text-gradient" id="page-title" style="font-family: 'Poppins';">Control Center Administrasi</h4>
+            </div>
+            <div class="d-flex align-items-center">
+                <div class="text-end me-3 d-none d-sm-block">
+                    <h6 class="fw-bold mb-0" id="sessionUserName">Waka Kurikulum</h6>
+                    <small class="text-muted">NIP. 198203152009031002</small>
+                </div>
+                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop&q=80" alt="Avatar Admin" class="rounded-circle shadow-sm" style="width: 45px; height: 45px; object-fit: cover;">
+            </div>
+        </div>
+
+        <!-- ================= CONTAINER VIEW 1: OVERVIEW ================= -->
+        <div id="view-overview">
+            <!-- STATS ROW -->
+            <div class="row g-4 mb-4">
+                <div class="col-xl-3 col-sm-6">
+                    <div class="db-card">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-muted small fw-semibold">Kelengkapan Perangkat</span>
+                                <h3 class="fw-bold my-1 text-primary">87.5%</h3>
+                                <small class="text-success"><i class="fas fa-arrow-up"></i> +4.2%</small>
+                            </div>
+                            <div class="fs-1 text-primary opacity-20"><i class="fas fa-folder-open"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6">
+                    <div class="db-card">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-muted small fw-semibold">Jadwal Terdistribusi</span>
+                                <h3 class="fw-bold my-1 text-success">68 Rombel</h3>
+                                <small class="text-muted">Status: 100% Valid</small>
+                            </div>
+                            <div class="fs-1 text-success opacity-20"><i class="fas fa-table"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6">
+                    <div class="db-card">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-muted small fw-semibold">Guru Di-Supervisi</span>
+                                <h3 class="fw-bold my-1 text-warning">42 / 120</h3>
+                                <small class="text-warning">Target: Akhir Semester</small>
+                            </div>
+                            <div class="fs-1 text-warning opacity-20"><i class="fas fa-user-check"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6">
+                    <div class="db-card">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-muted small fw-semibold">Rataan Nilai Projek</span>
+                                <h3 class="fw-bold my-1 text-info">84.2</h3>
+                                <small class="text-success"><i class="fas fa-arrow-up"></i> Capaian Tinggi</small>
+                            </div>
+                            <div class="fs-1 text-info opacity-20"><i class="fas fa-chart-line"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHARTS GRAPHICS ROW -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-8">
+                    <div class="db-card">
+                        <h5 class="fw-bold mb-4" style="font-family: 'Poppins';"><i class="fas fa-chart-area me-2 text-primary"></i>Tren Ketercapaian Target Mengajar Harian</h5>
+                        <canvas id="academicTrendChart" style="height: 300px; width: 100%;"></canvas>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="db-card">
+                        <h5 class="fw-bold mb-4" style="font-family: 'Poppins';"><i class="fas fa-pie-chart me-2 text-primary"></i>Distribusi Kurikulum</h5>
+                        <canvas id="curriculumPieChart" style="height: 300px; width: 100%;"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TABLE DATA GRID -->
+            <div class="db-card">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="fw-bold mb-0" style="font-family: 'Poppins';"><i class="fas fa-file-signature me-2 text-primary"></i>Persetujuan Modul Ajar Terbaru (Validasi Waka)</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Nama Guru</th>
+                                <th>Mata Pelajaran</th>
+                                <th>Kelas</th>
+                                <th>Tanggal Unggah</th>
+                                <th>Status Dokumen</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Ahmad Subarjo, S.Pd.</strong></td>
+                                <td>Informatika (Deep Learning AI)</td>
+                                <td>XI - Animasi 1</td>
+                                <td>11 Juli 2026</td>
+                                <td><span class="badge badge-approved px-3 py-2 rounded-pill">Disetujui</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Rina Herawati, M.T.</strong></td>
+                                <td>Praktik Kerja Industri (TEFA)</td>
+                                <td>XII - RPL 2</td>
+                                <td>10 Juli 2026</td>
+                                <td><span class="badge badge-pending px-3 py-2 rounded-pill">Menunggu Review</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= CONTAINER VIEW 2: INTEGRATED IFRAME JADWAL ================= -->
+        <div id="view-jadwal" class="d-none">
+            <div class="iframe-container">
+                <!-- Smooth Loader Animasi -->
+                <div class="iframe-loader" id="iframe-spinner">
+                    <div class="spinner-border text-primary mb-2" role="status"></div>
+                    <span class="text-muted small fw-semibold">Sinkronisasi Jadwal Pelajaran SMK...</span>
+                </div>
+                <!-- Target Frame Utama -->
+                <iframe id="jadwal-frame" src="about:blank"></iframe>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Scripts CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Dashboard Core & Switcher Logic -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Security Gate Check
+            const sessionData = sessionStorage.getItem('userSession');
+            if (!sessionData) {
+                alert("Akses ilegal terdeteksi. Silakan login terlebih dahulu.");
+                window.location.href = "index.html";
+                return;
+            }
+
+            const userObj = JSON.parse(sessionData);
+            document.getElementById('sessionUserName').innerText = userObj.role;
+
+            // Logika Logout
+            document.getElementById('btnLogout').addEventListener('click', function() {
+                sessionStorage.clear();
+                alert("Anda berhasil keluar dari sistem.");
+                window.location.href = "index.html";
+            });
+
+            // Dom View Elements
+            const menuOverview = document.getElementById('menu-overview');
+            const menuJadwal = document.getElementById('menu-jadwal');
+            const viewOverview = document.getElementById('view-overview');
+            const viewJadwal = document.getElementById('view-jadwal');
+            const pageTitle = document.getElementById('page-title');
+            const jadwalFrame = document.getElementById('jadwal-frame');
+            const iframeSpinner = document.getElementById('iframe-spinner');
+
+            // Switcher Ke Halaman Jadwal (Satu Frame)
+            menuJadwal.addEventListener('click', function() {
+                // Atur Active Menu State
+                menuOverview.classList.remove('active');
+                menuJadwal.classList.add('active');
+
+                // Toggle Konten
+                viewOverview.classList.add('d-none');
+                viewJadwal.classList.remove('d-none');
+                pageTitle.innerText = "Sistem Jadwal Pelajaran Terintegrasi";
+
+                // Muat URL ke dalam Frame jika belum pernah dimuat
+                if(jadwalFrame.src === "about:blank" || jadwalFrame.src === "") {
+                    iframeSpinner.style.opacity = "1";
+                    iframeSpinner.style.display = "flex";
+                    
+                    jadwalFrame.src = "https://web-ari-cell.github.io/jadwal_smk/";
+                    
+                    // Hilangkan spinner setelah halaman target ter-load sempurna
+                    jadwalFrame.onload = function() {
+                        iframeSpinner.style.opacity = "0";
+                        setTimeout(() => { iframeSpinner.style.display = "none"; }, 300);
+                    };
+                }
+            });
+
+            // Switcher Kembali Ke Overview Utama
+            menuOverview.addEventListener('click', function() {
+                menuJadwal.classList.remove('active');
+                menuOverview.classList.add('active');
+
+                viewJadwal.classList.add('d-none');
+                viewOverview.classList.remove('d-none');
+                pageTitle.innerText = "Control Center Administrasi";
+            });
+
+            // Sidebar Responsive Toggle
+            const toggleBtn = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('sidebar');
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', () => { sidebar.classList.toggle('active'); });
+            }
+
+            // --- INITIALIZE CHARTS ---
+            const ctxLine = document.getElementById('academicTrendChart').getContext('2d');
+            new Chart(ctxLine, {
+                type: 'line',
+                data: {
+                    labels: ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4', 'Minggu 5'],
+                    datasets: [{
+                        label: 'Target Kurikulum Terpenuhi (%)',
+                        data: [72, 78, 81, 85, 87.5],
+                        borderColor: '#0D47A1',
+                        backgroundColor: 'rgba(13, 71, 161, 0.05)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            const ctxPie = document.getElementById('curriculumPieChart').getContext('2d');
+            new Chart(ctxPie, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Kurikulum Merdeka', 'TEFA', 'Deep Learning'],
+                    datasets: [{
+                        data: [50, 30, 20],
+                        backgroundColor: ['#0D47A1', '#1565C0', '#42A5F5']
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        });
+    </script>
+</body>
+</html>
