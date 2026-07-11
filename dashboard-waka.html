@@ -91,7 +91,7 @@
         .iframe-container {
             position: relative;
             width: 100%;
-            height: calc(100vh - 160px); /* Menghitung sisa tinggi layar */
+            height: calc(100vh - 160px); 
             border-radius: 16px;
             overflow: hidden;
             box-shadow: var(--shadow-soft);
@@ -293,8 +293,8 @@
                     <div class="spinner-border text-primary mb-2" role="status"></div>
                     <span class="text-muted small fw-semibold">Sinkronisasi Jadwal Pelajaran SMK...</span>
                 </div>
-                <!-- Target Frame Utama -->
-                <iframe id="jadwal-frame" src="about:blank"></iframe>
+                <!-- Target Frame Utama dengan Proteksi Sandbox Anti Frame-Breaker -->
+                <iframe id="jadwal-frame" src="about:blank" sandbox="allow-forms allow-scripts allow-same-origin allow-popups" allow="fullscreen"></iframe>
             </div>
         </div>
 
@@ -334,29 +334,26 @@
             const jadwalFrame = document.getElementById('jadwal-frame');
             const iframeSpinner = document.getElementById('iframe-spinner');
 
-            // Switcher Ke Halaman Jadwal (Satu Frame)
+            // Switcher Ke Halaman Jadwal (Terkuci di dalam Frame)
             menuJadwal.addEventListener('click', function() {
-                // Atur Active Menu State
                 menuOverview.classList.remove('active');
                 menuJadwal.classList.add('active');
 
-                // Toggle Konten
                 viewOverview.classList.add('d-none');
                 viewJadwal.classList.remove('d-none');
                 pageTitle.innerText = "Sistem Jadwal Pelajaran Terintegrasi";
 
-                // Muat URL ke dalam Frame jika belum pernah dimuat
                 if(jadwalFrame.src === "about:blank" || jadwalFrame.src === "") {
                     iframeSpinner.style.opacity = "1";
                     iframeSpinner.style.display = "flex";
                     
                     jadwalFrame.src = "https://web-ari-cell.github.io/jadwal_smk/";
                     
-                    // Hilangkan spinner setelah halaman target ter-load sempurna
-                    jadwalFrame.onload = function() {
+                    // Force Remove Spinner dengan jeda render halaman eksternal secara aman
+                    setTimeout(() => {
                         iframeSpinner.style.opacity = "0";
                         setTimeout(() => { iframeSpinner.style.display = "none"; }, 300);
-                    };
+                    }, 1500);
                 }
             });
 
