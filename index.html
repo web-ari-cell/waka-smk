@@ -52,10 +52,63 @@
             cursor: pointer;
         }
     </style>
+
+    <!-- CRITICAL ENGINE CODE (Diletakkan di Head agar fungsi terbaca secara Global sebelum HTML dirender) -->
+    <script>
+        // Fungsi pembukaan jendela iFrame Jadwal
+        window.showJadwalEngine = function() {
+            const mainLandingView = document.getElementById('main-landing-view');
+            const landingJadwalView = document.getElementById('landing-jadwal-view');
+            const landingViewFrame = document.getElementById('landing-view-frame');
+            const landingViewSpinner = document.getElementById('landing-view-spinner');
+
+            if(mainLandingView && landingJadwalView) {
+                mainLandingView.classList.add('d-none');
+                landingJadwalView.classList.remove('d-none');
+                
+                // Set status kelas navigasi aktif
+                document.querySelectorAll('.navbar-nav .nav-link').forEach(el => el.classList.remove('active'));
+                const targetNav = document.getElementById('nav-jadwal-link');
+                if(targetNav) targetNav.classList.add('active');
+
+                if(landingViewFrame && (landingViewFrame.src === "about:blank" || landingViewFrame.src === "")) {
+                    if(landingViewSpinner) {
+                        landingViewSpinner.style.opacity = "1";
+                        landingViewSpinner.style.display = "flex";
+                    }
+                    landingViewFrame.src = "https://web-ari-cell.github.io/jadwal_smk/";
+                    
+                    setTimeout(() => {
+                        if(landingViewSpinner) {
+                            landingViewSpinner.style.opacity = "0";
+                            setTimeout(() => { landingViewSpinner.style.display = "none"; }, 300);
+                        }
+                    }, 1500);
+                }
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        // Fungsi Penutupan iFrame & Pengembalian ke Halaman Utama
+        window.showHomeEngine = function() {
+            const mainLandingView = document.getElementById('main-landing-view');
+            const landingJadwalView = document.getElementById('landing-jadwal-view');
+
+            if(mainLandingView && landingJadwalView) {
+                landingJadwalView.classList.add('d-none');
+                mainLandingView.classList.remove('d-none');
+                
+                document.querySelectorAll('.navbar-nav .nav-link').forEach(el => el.classList.remove('active'));
+                const homeNav = document.getElementById('nav-home-link');
+                if(homeNav) homeNav.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+    </script>
 </head>
 <body>
 
-    <!-- LOADING SCREEN (FAIL-SAFE INTERNAL CONTROL) -->
+    <!-- LOADING SCREEN -->
     <div id="loading-screen" style="position: fixed; inset: 0; background: #0D47A1; z-index: 10000; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease, visibility 0.5s ease;">
         <div class="spinner-border text-white" role="status"></div>
     </div>
@@ -79,10 +132,10 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto text-center align-items-center">
-                        <li class="nav-item"><a class="nav-link active" id="nav-home-link" onclick="window.showHomeEngine(); return false;">Home</a></li>
+                        <li class="nav-item"><a class="nav-link active" id="nav-home-link" onclick="window.showHomeEngine();">Home</a></li>
                         <li class="nav-item"><a class="nav-link smooth-scroll" href="#sambutan">Profil</a></li>
                         <li class="nav-item"><a class="nav-link smooth-scroll" href="#tugas">Program</a></li>
-                        <li class="nav-item"><a class="nav-link" id="nav-jadwal-link" onclick="window.showJadwalEngine(); return false;">Jadwal Pelajaran</a></li>
+                        <li class="nav-item"><a class="nav-link" id="nav-jadwal-link" onclick="window.showJadwalEngine();">Jadwal Pelajaran</a></li>
                         <li class="nav-item"><a class="nav-link smooth-scroll" href="#galeri">Galeri</a></li>
                         <li class="nav-item"><a class="nav-link smooth-scroll" href="#dokumen">Download</a></li>
                         <li class="nav-item"><a class="nav-link btn btn-outline-light btn-sm mx-2 px-3 rounded-pill" href="#login">Login</a></li>
@@ -158,7 +211,7 @@
                                 <h5 class="fw-bold">Jadwal Pelajaran</h5>
                                 <p class="text-muted small">Akses agenda KBM harian, alokasi ruangan kelas, dan jadwal mengajar guru terintegrasi.</p>
                             </div>
-                            <button class="btn btn-sm btn-outline-primary rounded-pill mt-3 align-self-start" onclick="window.showJadwalEngine(); return false;">Buka Jadwal <i class="fas fa-arrow-right ms-1"></i></button>
+                            <button class="btn btn-sm btn-outline-primary rounded-pill mt-3 align-self-start" onclick="window.showJadwalEngine();">Buka Jadwal <i class="fas fa-arrow-right ms-1"></i></button>
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="200">
@@ -434,7 +487,7 @@
 
     <!-- INTERNAL FORCE-OPEN KONTROL (ANTI-STUCK) -->
     <script>
-        // 1. Logika Pelindung: Paksa Hilangkan Loading Screen saat Halaman Selesai Dimuat Browser
+        // Logika Pelindung: Paksa Hilangkan Loading Screen saat Halaman Selesai Dimuat Browser
         window.addEventListener('load', function() {
             const ldr = document.getElementById('loading-screen');
             if(ldr) {
@@ -451,44 +504,20 @@
             }
         }, 2500);
 
-        // 2. Fungsi pembukaan jendela iFrame Jadwal
-        window.showJadwalEngine = function() {
-            const mainLandingView = document.getElementById('main-landing-view');
-            const landingJadwalView = document.getElementById('landing-jadwal-view');
-            const landingViewFrame = document.getElementById('landing-view-frame');
-            const landingViewSpinner = document.getElementById('landing-view-spinner');
-
-            mainLandingView.classList.add('d-none');
-            landingJadwalView.classList.remove('d-none');
-            
-            document.querySelectorAll('.navbar-nav .nav-link').forEach(el => el.classList.remove('active'));
-            document.getElementById('nav-jadwal-link').classList.add('active');
-
-            if(landingViewFrame.src === "about:blank" || landingViewFrame.src === "") {
-                landingViewSpinner.style.opacity = "1";
-                landingViewSpinner.style.display = "flex";
-                landingViewFrame.src = "https://web-ari-cell.github.io/jadwal_smk/";
-                
-                setTimeout(() => {
-                    landingViewSpinner.style.opacity = "0";
-                    setTimeout(() => { landingViewSpinner.style.display = "none"; }, 300);
-                }, 1500);
-            }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-
-        // 3. Fungsi Penutupan iFrame & Pengembalian ke Halaman Utama
-        window.showHomeEngine = function() {
-            const mainLandingView = document.getElementById('main-landing-view');
-            const landingJadwalView = document.getElementById('landing-jadwal-view');
-
-            landingJadwalView.classList.add('d-none');
-            mainLandingView.classList.remove('d-none');
-            
-            document.querySelectorAll('.navbar-nav .nav-link').forEach(el => el.classList.remove('active'));
-            document.getElementById('nav-home-link').classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
+        // Sambungkan link jangkar menu agar otomatis menutup tampilan jadwal jika pengguna kembali mengklik Profil/Program/Galeri/Download
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll('.navbar-nav .smooth-scroll').forEach(link => {
+                link.addEventListener('click', function() {
+                    const landingJadwalView = document.getElementById('landing-jadwal-view');
+                    const mainLandingView = document.getElementById('main-landing-view');
+                    if(landingJadwalView && !landingJadwalView.classList.contains('d-none')) {
+                        landingJadwalView.classList.add('d-none');
+                        mainLandingView.classList.remove('d-none');
+                        document.getElementById('nav-jadwal-link').classList.remove('active');
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>
