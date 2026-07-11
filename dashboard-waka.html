@@ -226,52 +226,50 @@
             </div>
 
             <div class="row g-4 mb-4">
-                <div class="col-lg-8">
-                    <div class="db-card">
-                        <h5 class="fw-bold mb-4" style="font-family: 'Poppins';"><i class="fas fa-chart-area me-2 text-primary"></i>Tren Ketercapaian Target Mengajar Harian</h5>
-                        <canvas id="academicTrendChart" style="height: 300px; width: 100%;"></canvas>
-                    </div>
-                </div>
                 <div class="col-lg-4">
                     <div class="db-card">
-                        <h5 class="fw-bold mb-4" style="font-family: 'Poppins';"><i class="fas fa-pie-chart me-2 text-primary"></i>Distribusi Kurikulum</h5>
-                        <canvas id="curriculumPieChart" style="height: 300px; width: 100%;"></canvas>
+                        <h5 class="fw-bold mb-4" style="font-family: 'Poppins';"><i class="fas fa-chart-pie me-2 text-primary"></i>Distribusi Kurikulum</h5>
+                        <div style="height: 295px; position: relative;">
+                            <canvas id="curriculumPieChart"></canvas>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="db-card">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h5 class="fw-bold mb-0" style="font-family: 'Poppins';"><i class="fas fa-file-signature me-2 text-primary"></i>Persetujuan Modul Ajar Terbaru (Validasi Waka)</h5>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Nama Guru</th>
-                                <th>Mata Pelajaran</th>
-                                <th>Kelas</th>
-                                <th>Tanggal Unggah</th>
-                                <th>Status Dokumen</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Ahmad Subarjo, S.Pd.</strong></td>
-                                <td>Informatika (Deep Learning AI)</td>
-                                <td>XI - Animasi 1</td>
-                                <td>11 Juli 2026</td>
-                                <td><span class="badge badge-approved px-3 py-2 rounded-pill">Disetujui</span></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Rina Herawati, M.T.</strong></td>
-                                <td>Praktik Kerja Industri (TEFA)</td>
-                                <td>XII - RPL 2</td>
-                                <td>10 Juli 2026</td>
-                                <td><span class="badge badge-pending px-3 py-2 rounded-pill">Menunggu Review</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="col-lg-8">
+                    <div class="db-card h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="fw-bold mb-0" style="font-family: 'Poppins';"><i class="fas fa-file-signature me-2 text-primary"></i>Persetujuan Modul Ajar Terbaru</h5>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Nama Guru</th>
+                                        <th>Mata Pelajaran</th>
+                                        <th>Kelas</th>
+                                        <th>Tanggal Unggah</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Ahmad Subarjo, S.Pd.</strong></td>
+                                        <td>Informatika (Deep Learning AI)</td>
+                                        <td>XI - Animasi 1</td>
+                                        <td>11 Juli 2026</td>
+                                        <td><span class="badge badge-approved px-3 py-2 rounded-pill">Disetujui</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Rina Herawati, M.T.</strong></td>
+                                        <td>Praktik Kerja Industri (TEFA)</td>
+                                        <td>XII - RPL 2</td>
+                                        <td>10 Juli 2026</td>
+                                        <td><span class="badge badge-pending px-3 py-2 rounded-pill">Menunggu Review</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -325,7 +323,7 @@
                 menuOverview.classList.remove('active');
                 menuJadwal.classList.add('active');
 
-                viewOverview.add('d-none' ? viewOverview.classList.add('d-none') : null);
+                viewOverview.classList.add('d-none');
                 viewJadwal.classList.remove('d-none');
                 pageTitle.innerText = "Sistem Jadwal Pelajaran Terintegrasi";
 
@@ -360,24 +358,7 @@
                 toggleBtn.addEventListener('click', () => { sidebar.classList.toggle('active'); });
             }
 
-            // --- INITIALIZE CHARTS ---
-            const ctxLine = document.getElementById('academicTrendChart').getContext('2d');
-            new Chart(ctxLine, {
-                type: 'line',
-                data: {
-                    labels: ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4', 'Minggu 5'],
-                    datasets: [{
-                        label: 'Target Kurikulum Terpenuhi (%)',
-                        data: [72, 78, 81, 85, 87.5],
-                        borderColor: '#0D47A1',
-                        backgroundColor: 'rgba(13, 71, 161, 0.05)',
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-
+            // --- INITIALIZE DISTRIBUSI PIE CHART ---
             const ctxPie = document.getElementById('curriculumPieChart').getContext('2d');
             new Chart(ctxPie, {
                 type: 'doughnut',
@@ -388,7 +369,13 @@
                         backgroundColor: ['#0D47A1', '#1565C0', '#42A5F5']
                     }]
                 },
-                options: { responsive: true, maintainAspectRatio: false }
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false,
+                    animation: {
+                        duration: 0 // Menonaktifkan animasi gerak konstan demi performa clean
+                    }
+                }
             });
         });
     </script>
