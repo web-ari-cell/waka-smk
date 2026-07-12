@@ -16,28 +16,32 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
     <style>
-        /* WORKSPACE IFRAME UNTUK LANDING PAGE */
-        .landing-iframe-section {
-            padding-top: 20px;
-            background-color: #F4F7FC;
-            min-height: calc(100vh - 80px);
+        /* CSS TAMBAHAN UNTUK MODAL JADWAL FULLSCREEN */
+        .modal-fullscreen-custom .modal-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: none;
+            height: 100vh;
         }
-        .landing-iframe-container {
+        .modal-fullscreen-custom .modal-header {
+            background: linear-gradient(135deg, #0D47A1, #1976D2);
+            color: white;
+            border-bottom: none;
+            padding: 15px 30px;
+        }
+        .modal-fullscreen-custom .iframe-wrapper {
             position: relative;
             width: 100%;
-            height: calc(100vh - 140px);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 8px 32px 0 rgba(13, 71, 161, 0.08);
+            height: calc(100vh - 70px);
             background: #fff;
-            border: 1px solid rgba(13, 71, 161, 0.1);
         }
-        .landing-iframe-container iframe {
+        .modal-fullscreen-custom iframe {
             width: 100%;
             height: 100%;
             border: none;
         }
-        .landing-iframe-loader {
+        .modal-fullscreen-custom .iframe-loader-landing {
             position: absolute;
             inset: 0;
             background: #ffffff;
@@ -48,69 +52,13 @@
             z-index: 10;
             transition: opacity 0.3s ease;
         }
-        .navbar-nav .nav-link {
-            cursor: pointer;
-        }
     </style>
-
-    <!-- CRITICAL ENGINE CODE (Diletakkan di Head agar fungsi terbaca secara Global sebelum HTML dirender) -->
-    <script>
-        // Fungsi pembukaan jendela iFrame Jadwal
-        window.showJadwalEngine = function() {
-            const mainLandingView = document.getElementById('main-landing-view');
-            const landingJadwalView = document.getElementById('landing-jadwal-view');
-            const landingViewFrame = document.getElementById('landing-view-frame');
-            const landingViewSpinner = document.getElementById('landing-view-spinner');
-
-            if(mainLandingView && landingJadwalView) {
-                mainLandingView.classList.add('d-none');
-                landingJadwalView.classList.remove('d-none');
-                
-                // Set status kelas navigasi aktif
-                document.querySelectorAll('.navbar-nav .nav-link').forEach(el => el.classList.remove('active'));
-                const targetNav = document.getElementById('nav-jadwal-link');
-                if(targetNav) targetNav.classList.add('active');
-
-                if(landingViewFrame && (landingViewFrame.src === "about:blank" || landingViewFrame.src === "")) {
-                    if(landingViewSpinner) {
-                        landingViewSpinner.style.opacity = "1";
-                        landingViewSpinner.style.display = "flex";
-                    }
-                    landingViewFrame.src = "https://web-ari-cell.github.io/jadwal_smk/";
-                    
-                    setTimeout(() => {
-                        if(landingViewSpinner) {
-                            landingViewSpinner.style.opacity = "0";
-                            setTimeout(() => { landingViewSpinner.style.display = "none"; }, 300);
-                        }
-                    }, 1500);
-                }
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        };
-
-        // Fungsi Penutupan iFrame & Pengembalian ke Halaman Utama
-        window.showHomeEngine = function() {
-            const mainLandingView = document.getElementById('main-landing-view');
-            const landingJadwalView = document.getElementById('landing-jadwal-view');
-
-            if(mainLandingView && landingJadwalView) {
-                landingJadwalView.classList.add('d-none');
-                mainLandingView.classList.remove('d-none');
-                
-                document.querySelectorAll('.navbar-nav .nav-link').forEach(el => el.classList.remove('active'));
-                const homeNav = document.getElementById('nav-home-link');
-                if(homeNav) homeNav.classList.add('active');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        };
-    </script>
 </head>
 <body>
 
     <!-- LOADING SCREEN -->
-    <div id="loading-screen" style="position: fixed; inset: 0; background: #0D47A1; z-index: 10000; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease, visibility 0.5s ease;">
-        <div class="spinner-border text-white" role="status"></div>
+    <div id="loading-screen">
+        <div class="spinner-border text-primary" role="status"></div>
     </div>
 
     <!-- PARTICLE BACKGROUND (Hero Only) -->
@@ -120,7 +68,7 @@
     <header class="sticky-top">
         <nav class="navbar navbar-expand-lg glass-nav">
             <div class="container">
-                <a class="navbar-brand d-flex align-items-center" href="index.html">
+                <a class="navbar-brand d-flex align-items-center" href="#">
                     <img src="https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=80&auto=format&fit=crop&q=60" alt="Logo Sekolah" class="logo-img me-2">
                     <div>
                         <span class="brand-title">WAKIL KEPALA SEKOLAH</span>
@@ -132,10 +80,10 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto text-center align-items-center">
-                        <li class="nav-item"><a class="nav-link active" id="nav-home-link" onclick="window.showHomeEngine();">Home</a></li>
+                        <li class="nav-item"><a class="nav-link smooth-scroll" href="#home">Home</a></li>
                         <li class="nav-item"><a class="nav-link smooth-scroll" href="#sambutan">Profil</a></li>
                         <li class="nav-item"><a class="nav-link smooth-scroll" href="#tugas">Program</a></li>
-                        <li class="nav-item"><a class="nav-link" id="nav-jadwal-link" onclick="window.showJadwalEngine();">Jadwal Pelajaran</a></li>
+                        <li class="nav-item"><a class="nav-link" href="javascript:void(0)" id="nav-jadwal-trigger">Jadwal Pelajaran</a></li>
                         <li class="nav-item"><a class="nav-link smooth-scroll" href="#galeri">Galeri</a></li>
                         <li class="nav-item"><a class="nav-link smooth-scroll" href="#dokumen">Download</a></li>
                         <li class="nav-item"><a class="nav-link btn btn-outline-light btn-sm mx-2 px-3 rounded-pill" href="#login">Login</a></li>
@@ -149,294 +97,277 @@
         </nav>
     </header>
 
-    <!-- ================= VIEW UTAMA LANDING PAGE ================= -->
-    <div id="main-landing-view">
-        <!-- HERO SECTION -->
-        <section id="home" class="hero-section text-white d-flex align-items-center position-relative overflow-hidden">
-            <div class="container position-relative z-2">
-                <div class="row align-items-center min-vh-75 py-5">
-                    <div class="col-lg-6" data-aos="fade-right">
-                        <h1 class="display-4 fw-bold mb-3">Membangun Pendidikan Berkualitas Melalui Kurikulum yang Adaptif</h1>
-                        <p class="lead opacity-75 mb-4">Bidang Kurikulum bertanggung jawab dalam perencanaan, pelaksanaan, monitoring, evaluasi pembelajaran, penyusunan jadwal, asesmen, pengembangan perangkat ajar, hingga peningkatan mutu pendidikan.</p>
-                        <div class="d-flex gap-3">
-                            <a href="#sambutan" class="btn btn-light btn-lg rounded-pill px-4 shadow-sm hover-glow">Pelajari Lebih Lanjut</a>
-                            <a href="#dokumen" class="btn btn-outline-light btn-lg rounded-pill px-4">Download Dokumen</a>
-                        </div>
+    <!-- HERO SECTION -->
+    <section id="home" class="hero-section text-white d-flex align-items-center position-relative overflow-hidden">
+        <div class="container position-relative z-2">
+            <div class="row align-items-center min-vh-75 py-5">
+                <div class="col-lg-6" data-aos="fade-right">
+                    <h1 class="display-4 fw-bold mb-3">Membangun Pendidikan Berkualitas Melalui Kurikulum yang Adaptif</h1>
+                    <p class="lead opacity-75 mb-4">Bidang Kurikulum bertanggung jawab dalam perencanaan, pelaksanaan, monitoring, evaluasi pembelajaran, penyusunan jadwal, asesmen, pengembangan perangkat ajar, hingga peningkatan mutu pendidikan.</p>
+                    <div class="d-flex gap-3">
+                        <a href="#sambutan" class="btn btn-light btn-lg rounded-pill px-4 shadow-sm hover-glow">Pelajari Lebih Lanjut</a>
+                        <a href="#dokumen" class="btn btn-outline-light btn-lg rounded-pill px-4">Download Dokumen</a>
                     </div>
-                    <div class="col-lg-6 mt-5 mt-lg-0" data-aos="fade-left">
-                        <div class="swiper hero-swiper rounded-4 overflow-hidden glass-card p-2">
-                            <div class="swiper-wrapper">
-                                <div class="swiper-slide"><img data-src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&auto=format&fit=crop&q=80" class="img-fluid rounded-4 lazy" alt="Guru mengajar di kelas modern"></div>
-                                <div class="swiper-slide"><img data-src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&auto=format&fit=crop&q=80" class="img-fluid rounded-4 lazy" alt="Siswa belajar menggunakan laptop"></div>
-                                <div class="swiper-slide"><img data-src="https://images.unsplash.com/photo-1581092921461-eab62e97a780?w=600&auto=format&fit=crop&q=80" class="img-fluid rounded-4 lazy" alt="Laboratorium komputer SMK"></div>
-                            </div>
+                </div>
+                <div class="col-lg-6 mt-5 mt-lg-0" data-aos="fade-left">
+                    <div class="swiper hero-swiper rounded-4 overflow-hidden glass-card p-2">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide"><img data-src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&auto=format&fit=crop&q=80" class="img-fluid rounded-4 lazy" alt="Guru mengajar di kelas modern"></div>
+                            <div class="swiper-slide"><img data-src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&auto=format&fit=crop&q=80" class="img-fluid rounded-4 lazy" alt="Siswa belajar menggunakan laptop"></div>
+                            <div class="swiper-slide"><img data-src="https://images.unsplash.com/photo-1581092921461-eab62e97a780?w=600&auto=format&fit=crop&q=80" class="img-fluid rounded-4 lazy" alt="Laboratorium komputer SMK"></div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="wave-container"><svg viewBox="0 0 1440 120" class="wave-svg"><path d="M0,64L120,80C240,96,480,128,720,128C960,128,1200,96,1320,80L1440,64L1440,120L1320,120C1200,120,960,120,720,120C480,120,240,120,120,120L0,120Z"></path></svg></div>
-        </section>
-
-        <!-- SECTION SAMBUTAN -->
-        <section id="sambutan" class="py-5 section-padding bg-light-blue">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-lg-4 text-center mb-4 mb-lg-0" data-aos="zoom-in">
-                        <div class="avatar-wrapper position-relative d-inline-block">
-                            <img data-src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&auto=format&fit=crop&q=80" alt="Waka Kurikulum" class="rounded-circle img-fluid shadow-lg main-avatar lazy">
-                            <div class="floating-shape shape-1"></div>
-                        </div>
-                    </div>
-                    <div class="col-lg-8" data-aos="fade-up">
-                        <h6 class="text-primary fw-bold text-uppercase tracking-wider">Sambutan</h6>
-                        <h2 class="fw-bold mb-4">Wakil Kepala Sekolah Bidang Kurikulum</h2>
-                        <p class="text-muted leading-relaxed">Selamat datang di portal akademik Bidang Kurikulum. Fokus utama kami adalah mengintegrasikan teknologi digital, metode *Deep Learning*, dan kesiapan industri guna melahirkan lulusan yang kompetitif di era transformasi global. Melalui ekosistem pembelajaran yang fleksibel namun terukur, kami berkomitmen mendampingi seluruh tenaga pendidik untuk menyajikan pengalaman belajar terbaik bagi para siswa.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECTION TUGAS POKOK -->
-        <section id="tugas" class="py-5 section-padding">
-            <div class="container">
-                <div class="text-center mb-5" data-aos="fade-up">
-                    <h2 class="fw-bold">Tugas Pokok & Esensi Kurikulum</h2>
-                    <div class="heading-line mx-auto"></div>
-                </div>
-                <div class="row g-4">
-                    <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="100">
-                        <div class="modern-card glass-card p-4 rounded-4 h-100 transition-all d-flex flex-column justify-content-between">
-                            <div>
-                                <div class="icon-box mb-3 text-primary fs-3"><i class="fa-solid fa-clock"></i></div>
-                                <h5 class="fw-bold">Jadwal Pelajaran</h5>
-                                <p class="text-muted small">Akses agenda KBM harian, alokasi ruangan kelas, dan jadwal mengajar guru terintegrasi.</p>
-                            </div>
-                            <button class="btn btn-sm btn-outline-primary rounded-pill mt-3 align-self-start" onclick="window.showJadwalEngine();">Buka Jadwal <i class="fas fa-arrow-right ms-1"></i></button>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="200">
-                        <div class="modern-card glass-card p-4 rounded-4 h-100 transition-all">
-                            <div class="icon-box mb-3 text-primary fs-3"><i class="fa-solid fa-laptop-code"></i></div>
-                            <h5 class="fw-bold">Pengembangan Deep Learning</h5>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="300">
-                        <div class="modern-card glass-card p-4 rounded-4 h-100 transition-all">
-                            <div class="icon-box mb-3 text-primary fs-3"><i class="fa-solid fa-industry"></i></div>
-                            <h5 class="fw-bold">Teaching Factory (TEFA)</h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECTION PROGRAM UNGGULAN -->
-        <section id="program" class="py-5 section-padding bg-light-blue">
-            <div class="container">
-                <div class="text-center mb-5" data-aos="fade-up">
-                    <h2 class="fw-bold">6 Program Unggulan Akademik</h2>
-                </div>
-                <div class="row g-4">
-                    <div class="col-lg-4 col-md-6" data-aos="zoom-in">
-                        <div class="card border-0 rounded-4 shadow-sm overflow-hidden h-100 program-card">
-                            <div class="img-zoom-container">
-                                <img data-src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500&auto=format&fit=crop&q=80" class="card-img-top lazy" alt="Digital Learning">
-                            </div>
-                            <div class="card-body p-4">
-                                <h5 class="fw-bold">Digital Learning Era</h5>
-                                <p class="text-muted small">Transformasi penuh ruang kelas konvensional menjadi ekosistem digital interaktif.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECTION DATA (COUNTER) -->
-        <section class="py-5 bg-gradient text-white text-center position-relative">
-            <div class="container py-4">
-                <div class="row g-4">
-                    <div class="col-md-2 col-6">
-                        <h2 class="counter fw-bold display-5" data-target="120">0</h2>
-                        <p class="small opacity-75 mb-0">Guru</p>
-                    </div>
-                    <div class="col-md-2 col-6">
-                        <h2 class="counter fw-bold display-5" data-target="2100">0</h2>
-                        <p class="small opacity-75 mb-0">Siswa</p>
-                    </div>
-                    <div class="col-md-2 col-6">
-                        <h2 class="counter fw-bold display-5" data-target="68">0</h2>
-                        <p class="small opacity-75 mb-0">Rombel</p>
-                    </div>
-                    <div class="col-md-2 col-6">
-                        <h2 class="counter fw-bold display-5" data-target="28">0</h2>
-                        <p class="small opacity-75 mb-0">Mata Pelajaran</p>
-                    </div>
-                    <div class="col-md-2 col-6">
-                        <h2 class="counter fw-bold display-5" data-target="10">0</h2>
-                        <p class="small opacity-75 mb-0">Kompetensi</p>
-                    </div>
-                    <div class="col-md-2 col-6">
-                        <h2 class="counter fw-bold display-5" data-target="250">0</h2>
-                        <p class="small opacity-75 mb-0">Prestasi</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECTION TIM KURIKULUM -->
-        <section class="py-5 section-padding">
-            <div class="container">
-                <div class="text-center mb-5"><h2 class="fw-bold">Tim Kerja Kurikulum</h2></div>
-                <div class="row g-4 justify-content-center">
-                    <div class="col-lg-3 col-md-6 text-center" data-aos="fade-up">
-                        <div class="glass-card p-4 rounded-4 hover-glow transition-all">
-                            <img data-src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=300&auto=format&fit=crop&q=80" class="rounded-circle img-fluid mb-3 lazy" style="width:120px;height:120px;object-fit:cover;" alt="Tim Kurikulum">
-                            <h6 class="fw-bold mb-1">Budi Santoso, M.Pd</h6>
-                            <p class="text-primary small mb-2">Staf Kurikulum/Data</p>
-                            <div class="social-links"><a href="#" class="text-muted mx-1"><i class="fab fa-linkedin"></i></a></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECTION GALERI -->
-        <section id="galeri" class="py-5 section-padding bg-light-blue">
-            <div class="container">
-                <div class="text-center mb-5"><h2 class="fw-bold">Galeri Aktivitas Akademik</h2></div>
-                <div class="row g-3 masonry-grid">
-                    <div class="col-md-4 col-sm-6">
-                        <a href="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800" class="glightbox">
-                            <div class="overflow-hidden rounded-4 position-relative img-zoom-container shadow-sm">
-                                <img data-src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=500" class="img-fluid lazy" alt="Workshop Guru">
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECTION DOKUMEN -->
-        <section id="dokumen" class="py-5 section-padding">
-            <div class="container">
-                <div class="text-center mb-5"><h2 class="fw-bold">Pusat Unduhan Dokumen</h2></div>
-                <div class="row g-3">
-                    <div class="col-lg-3 col-md-6" data-aos="fade-up">
-                        <div class="p-3 d-flex align-items-center justify-content-between rounded-4 shadow-sm border bg-white hover-glow">
-                            <div class="d-flex align-items-center">
-                                <i class="fa-regular fa-file-pdf text-danger fs-3 me-3"></i>
-                                <span class="fw-semibold small">Kalender Akademik</span>
-                            </div>
-                            <a href="#" class="btn btn-sm btn-primary rounded-circle"><i class="fas fa-download"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECTION BERITA -->
-        <section class="py-5 section-padding bg-light-blue">
-            <div class="container">
-                <div class="text-center mb-5"><h2 class="fw-bold">Warta & Informasi Terbaru</h2></div>
-                <div class="swiper news-swiper">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide p-2">
-                            <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
-                                <img data-src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=500" class="card-img-top lazy" alt="Berita">
-                                <div class="card-body p-4">
-                                    <h6 class="fw-bold">Implementasi Strategi Pembelajaran Deep Learning</h6>
-                                    <p class="text-muted small mb-0">Akselerasi mutu pendidik dalam memanfaatkan model pembelajaran kognitif tingkat tinggi...</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-pagination mt-4 position-relative"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECTION TESTIMONI -->
-        <section class="py-5 section-padding">
-            <div class="container">
-                <div class="swiper testimonial-swiper">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide text-center px-4">
-                            <i class="fa-solid fa-quote-left display-4 text-accent opacity-20 mb-3"></i>
-                            <p class="lead fst-italic text-muted">"Sistem administrasi mengajar yang dikembangkan tim kurikulum sangat memudahkan kami fokus pada esensi mendidik."</p>
-                            <h6 class="fw-bold mt-3 mb-0">- Dra. Sri Wahyuni (Guru Senior)</h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECTION FAQ -->
-        <section class="py-5 section-padding bg-light-blue">
-            <div class="container">
-                <div class="text-center mb-5"><h2 class="fw-bold">Frequently Asked Questions</h2></div>
-                <div class="accordion accordion-flush rounded-4 overflow-hidden shadow-sm border" id="faqAccordion" style="max-width: 800px; margin: 0 auto;">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                                Apa itu program Deep Learning di sekolah kami?
-                            </button>
-                        </h2>
-                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body text-muted">Deep learning merupakan pendekatan pembelajaran terfokus untuk melatih nalar kritis siswa secara mendalam melewati metode hafalan konvensional.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- FOOTER -->
-        <footer class="bg-dark text-white pt-5 pb-3">
-            <div class="container">
-                <div class="row g-4 mb-4">
-                    <div class="col-lg-4">
-                        <h5 class="fw-bold text-gradient mb-3">WAKA KURIKULUM</h5>
-                        <p class="small opacity-75">Berdedikasi menciptakan sistem pendidikan yang berintegritas tinggi, berwawasan global, dan berbasis kompetensi masa depan.</p>
-                    </div>
-                    <div class="col-lg-4">
-                        <h6 class="fw-bold mb-3">Kontak Hubungi</h6>
-                        <p class="small mb-1"><i class="fas fa-map-marker-alt me-2"></i> Jl. Pendidikan No. 45, Kota Pintar</p>
-                        <p class="small mb-1"><i class="fas fa-envelope me-2"></i> kurikulum@sekolah.sch.id</p>
-                        <p class="small"><i class="fas fa-phone me-2"></i> +62 812-3456-7890</p>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="rounded-4 overflow-hidden shadow-sm ratio ratio-16x9">
-                            <iframe src="https://maps.google.com/maps?q=Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" loading="lazy"></iframe>
-                        </div>
-                    </div>
-                </div>
-                <hr class="opacity-20">
-                <div class="d-flex flex-sm-row flex-column justify-content-between align-items-center small opacity-75">
-                    <p class="mb-0">© 2026 Bidang Kurikulum Sekolah. All Rights Reserved.</p>
-                    <div class="d-flex gap-3 mt-2 mt-sm-0">
-                        <a href="#" class="text-white"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-            </div>
-        </footer>
-    </div>
-
-    <!-- ================= VIEW KEDUA: EMBED JADWAL LANGSUNG DI BAWAH NAVBAR ================= -->
-    <div id="landing-jadwal-view" class="d-none landing-iframe-section">
-        <div class="container">
-            <div class="landing-iframe-container">
-                <!-- Loader internal -->
-                <div class="landing-iframe-loader" id="landing-view-spinner">
-                    <div class="spinner-border text-primary mb-2" role="status"></div>
-                    <span class="text-muted small fw-semibold">Mengamankan Akses Jadwal Pelajaran SMK...</span>
-                </div>
-                <!-- Frame Utama Perlindungan Penuh + Cetak PDF A4 Aktif -->
-                <iframe id="landing-view-frame" src="about:blank" sandbox="allow-forms allow-scripts allow-same-origin allow-popups allow-modals allow-downloads allow-popups-to-escape-sandbox" allow="fullscreen"></iframe>
             </div>
         </div>
-    </div>
+        <div class="wave-container"><svg viewBox="0 0 1440 120" class="wave-svg"><path d="M0,64L120,80C240,96,480,128,720,128C960,128,1200,96,1320,80L1440,64L1440,120L1320,120C1200,120,960,120,720,120C480,120,240,120,120,120L0,120Z"></path></svg></div>
+    </section>
+
+    <!-- SECTION SAMBUTAN -->
+    <section id="sambutan" class="py-5 section-padding bg-light-blue">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-4 text-center mb-4 mb-lg-0" data-aos="zoom-in">
+                    <div class="avatar-wrapper position-relative d-inline-block">
+                        <img data-src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&auto=format&fit=crop&q=80" alt="Waka Kurikulum" class="rounded-circle img-fluid shadow-lg main-avatar lazy">
+                        <div class="floating-shape shape-1"></div>
+                    </div>
+                </div>
+                <div class="col-lg-8" data-aos="fade-up">
+                    <h6 class="text-primary fw-bold text-uppercase tracking-wider">Sambutan</h6>
+                    <h2 class="fw-bold mb-4">Wakil Kepala Sekolah Bidang Kurikulum</h2>
+                    <p class="text-muted leading-relaxed">Selamat datang di portal akademik Bidang Kurikulum. Fokus utama kami adalah mengintegrasikan teknologi digital, metode *Deep Learning*, dan kesiapan industri guna melahirkan lulusan yang kompetitif di era transformasi global. Melalui ekosistem pembelajaran yang fleksibel namun terukur, kami berkomitmen mendampingi seluruh tenaga pendidik untuk menyajikan pengalaman belajar terbaik bagi para siswa.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION TUGAS POKOK -->
+    <section id="tugas" class="py-5 section-padding">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="fw-bold">Tugas Pokok & Esensi Kurikulum</h2>
+                <div class="heading-line mx-auto"></div>
+            </div>
+            <div class="row g-4">
+                <!-- CARD JADWAL TERINTEGRASI PADA LANDING PAGE -->
+                <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="modern-card glass-card p-4 rounded-4 h-100 transition-all d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="icon-box mb-3 text-primary fs-3"><i class="fa-solid fa-clock"></i></div>
+                            <h5 class="fw-bold">Jadwal Pelajaran</h5>
+                            <p class="text-muted small">Akses agenda KBM harian, alokasi ruangan kelas, dan jadwal mengajar guru terintegrasi.</p>
+                        </div>
+                        <button id="card-jadwal-trigger" class="btn btn-sm btn-outline-primary rounded-pill mt-3 align-self-start">Buka Jadwal <i class="fas fa-arrow-right ms-1"></i></button>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="modern-card glass-card p-4 rounded-4 h-100 transition-all">
+                        <div class="icon-box mb-3 text-primary fs-3"><i class="fa-solid fa-laptop-code"></i></div>
+                        <h5 class="fw-bold">Pengembangan Deep Learning</h5>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="modern-card glass-card p-4 rounded-4 h-100 transition-all">
+                        <div class="icon-box mb-3 text-primary fs-3"><i class="fa-solid fa-industry"></i></div>
+                        <h5 class="fw-bold">Teaching Factory (TEFA)</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION PROGRAM UNGGULAN -->
+    <section id="program" class="py-5 section-padding bg-light-blue">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="fw-bold">6 Program Unggulan Akademik</h2>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6" data-aos="zoom-in">
+                    <div class="card border-0 rounded-4 shadow-sm overflow-hidden h-100 program-card">
+                        <div class="img-zoom-container">
+                            <img data-src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500&auto=format&fit=crop&q=80" class="card-img-top lazy" alt="Digital Learning">
+                        </div>
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold">Digital Learning Era</h5>
+                            <p class="text-muted small">Transformasi penuh ruang kelas konvensional menjadi ekosistem digital interaktif.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION DATA (COUNTER) -->
+    <section class="py-5 bg-gradient text-white text-center position-relative">
+        <div class="container py-4">
+            <div class="row g-4">
+                <div class="col-md-2 col-6">
+                    <h2 class="counter fw-bold display-5" data-target="120">0</h2>
+                    <p class="small opacity-75 mb-0">Guru</p>
+                </div>
+                <div class="col-md-2 col-6">
+                    <h2 class="counter fw-bold display-5" data-target="2100">0</h2>
+                    <p class="small opacity-75 mb-0">Siswa</p>
+                </div>
+                <div class="col-md-2 col-6">
+                    <h2 class="counter fw-bold display-5" data-target="68">0</h2>
+                    <p class="small opacity-75 mb-0">Rombel</p>
+                </div>
+                <div class="col-md-2 col-6">
+                    <h2 class="counter fw-bold display-5" data-target="28">0</h2>
+                    <p class="small opacity-75 mb-0">Mata Pelajaran</p>
+                </div>
+                <div class="col-md-2 col-6">
+                    <h2 class="counter fw-bold display-5" data-target="10">0</h2>
+                    <p class="small opacity-75 mb-0">Kompetensi</p>
+                </div>
+                <div class="col-md-2 col-6">
+                    <h2 class="counter fw-bold display-5" data-target="250">0</h2>
+                    <p class="small opacity-75 mb-0">Prestasi</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION TIM KURIKULUM -->
+    <section class="py-5 section-padding">
+        <div class="container">
+            <div class="text-center mb-5"><h2 class="fw-bold">Tim Kerja Kurikulum</h2></div>
+            <div class="row g-4 justify-content-center">
+                <div class="col-lg-3 col-md-6 text-center" data-aos="fade-up">
+                    <div class="glass-card p-4 rounded-4 hover-glow transition-all">
+                        <img data-src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=300&auto=format&fit=crop&q=80" class="rounded-circle img-fluid mb-3 lazy" style="width:120px;height:120px;object-fit:cover;" alt="Tim Kurikulum">
+                        <h6 class="fw-bold mb-1">Budi Santoso, M.Pd</h6>
+                        <p class="text-primary small mb-2">Staf Kurikulum/Data</p>
+                        <div class="social-links"><a href="#" class="text-muted mx-1"><i class="fab fa-linkedin"></i></a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION GALERI -->
+    <section id="galeri" class="py-5 section-padding bg-light-blue">
+        <div class="container">
+            <div class="text-center mb-5"><h2 class="fw-bold">Galeri Aktivitas Akademik</h2></div>
+            <div class="row g-3 masonry-grid">
+                <div class="col-md-4 col-sm-6">
+                    <a href="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800" class="glightbox">
+                        <div class="overflow-hidden rounded-4 position-relative img-zoom-container shadow-sm">
+                            <img data-src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=500" class="img-fluid lazy" alt="Workshop Guru">
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION DOKUMEN -->
+    <section id="dokumen" class="py-5 section-padding">
+        <div class="container">
+            <div class="text-center mb-5"><h2 class="fw-bold">Pusat Unduhan Dokumen</h2></div>
+            <div class="row g-3">
+                <div class="col-lg-3 col-md-6" data-aos="fade-up">
+                    <div class="p-3 d-flex align-items-center justify-content-between rounded-4 shadow-sm border bg-white hover-glow">
+                        <div class="d-flex align-items-center">
+                            <i class="fa-regular fa-file-pdf text-danger fs-3 me-3"></i>
+                            <span class="fw-semibold small">Kalender Akademik</span>
+                        </div>
+                        <a href="#" class="btn btn-sm btn-primary rounded-circle"><i class="fas fa-download"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION BERITA -->
+    <section class="py-5 section-padding bg-light-blue">
+        <div class="container">
+            <div class="text-center mb-5"><h2 class="fw-bold">Warta & Informasi Terbaru</h2></div>
+            <div class="swiper news-swiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide p-2">
+                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
+                            <img data-src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=500" class="card-img-top lazy" alt="Berita">
+                            <div class="card-body p-4">
+                                <h6 class="fw-bold">Implementasi Strategi Pembelajaran Deep Learning</h6>
+                                <p class="text-muted small mb-0">Akselerasi mutu pendidik dalam memanfaatkan model pembelajaran kognitif tingkat tinggi...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-pagination mt-4 position-relative"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION TESTIMONI -->
+    <section class="py-5 section-padding">
+        <div class="container">
+            <div class="swiper testimonial-swiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide text-center px-4">
+                        <i class="fa-solid fa-quote-left display-4 text-accent opacity-20 mb-3"></i>
+                        <p class="lead fst-italic text-muted">"Sistem administrasi mengajar yang dikembangkan tim kurikulum sangat memudahkan kami fokus pada esensi mendidik."</p>
+                        <h6 class="fw-bold mt-3 mb-0">- Dra. Sri Wahyuni (Guru Senior)</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION FAQ -->
+    <section class="py-5 section-padding bg-light-blue">
+        <div class="container">
+            <div class="text-center mb-5"><h2 class="fw-bold">Frequently Asked Questions</h2></div>
+            <div class="accordion accordion-flush rounded-4 overflow-hidden shadow-sm border" id="faqAccordion" style="max-width: 800px; margin: 0 auto;">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                            Apa itu program Deep Learning di sekolah kami?
+                        </button>
+                    </h2>
+                    <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-muted">Deep learning merupakan pendekatan pembelajaran terfokus untuk melatih nalar kritis siswa secara mendalam melewati metode hafalan konvensional.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-dark text-white pt-5 pb-3">
+        <div class="container">
+            <div class="row g-4 mb-4">
+                <div class="col-lg-4">
+                    <h5 class="fw-bold text-gradient mb-3">WAKA KURIKULUM</h5>
+                    <p class="small opacity-75">Berdedikasi menciptakan sistem pendidikan yang berintegritas tinggi, berwawasan global, dan berbasis kompetensi masa depan.</p>
+                </div>
+                <div class="col-lg-4">
+                    <h6 class="fw-bold mb-3">Kontak Hubungi</h6>
+                    <p class="small mb-1"><i class="fas fa-map-marker-alt me-2"></i> Jl. Pendidikan No. 45, Kota Pintar</p>
+                    <p class="small mb-1"><i class="fas fa-envelope me-2"></i> kurikulum@sekolah.sch.id</p>
+                    <p class="small"><i class="fas fa-phone me-2"></i> +62 812-3456-7890</p>
+                </div>
+                <div class="col-lg-4">
+                    <div class="rounded-4 overflow-hidden shadow-sm ratio ratio-16x9">
+                        <iframe src="https://maps.google.com/maps?q=Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" loading="lazy"></iframe>
+                    </div>
+                </div>
+            </div>
+            <hr class="opacity-20">
+            <div class="d-flex flex-sm-row flex-column justify-content-between align-items-center small opacity-75">
+                <p class="mb-0">© 2026 Bidang Kurikulum Sekolah. All Rights Reserved.</p>
+                <div class="d-flex gap-3 mt-2 mt-sm-0">
+                    <a href="#" class="text-white"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="text-white"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-white"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <!-- MODAL LOGIN GLASSMORPHISM -->
     <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
@@ -474,6 +405,29 @@
         </div>
     </div>
 
+    <!-- MODAL INTEGRASI JADWAL PELAJARAN DI LANDING PAGE (SANDBOXED FOR A4 PRINTING) -->
+    <div class="modal fade modal-fullscreen-custom" id="jadwalModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header d-flex justify-content-between align-items-center">
+                    <h5 class="modal-title fw-bold" style="font-family: 'Poppins';"><i class="fas fa-calendar-alt me-2"></i>Sistem Jadwal Pelajaran Terintegrasi</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="iframe-wrapper">
+                        <!-- Loader internal modal -->
+                        <div class="iframe-loader-landing" id="landing-iframe-spinner">
+                            <div class="spinner-border text-primary mb-2" role="status"></div>
+                            <span class="text-muted small fw-semibold">Memuat Jadwal Pelajaran SMK...</span>
+                        </div>
+                        <!-- Frame Target Utama -->
+                        <iframe id="landing-jadwal-frame" src="about:blank" sandbox="allow-forms allow-scripts allow-same-origin allow-popups allow-modals allow-downloads allow-popups-to-escape-sandbox" allow="fullscreen"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- BACK TO TOP BUTTON -->
     <button id="backToTop" class="btn btn-primary rounded-circle shadow-lg position-fixed" style="bottom:25px;right:25px;display:none;z-index:999;"><i class="fas fa-arrow-up"></i></button>
 
@@ -485,38 +439,38 @@
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script src="script.js"></script>
 
-    <!-- INTERNAL FORCE-OPEN KONTROL (ANTI-STUCK) -->
+    <!-- INJEKSI LOGIKA EMBED DI INDEX -->
     <script>
-        // Logika Pelindung: Paksa Hilangkan Loading Screen saat Halaman Selesai Dimuat Browser
-        window.addEventListener('load', function() {
-            const ldr = document.getElementById('loading-screen');
-            if(ldr) {
-                ldr.style.opacity = '0';
-                setTimeout(() => { ldr.style.display = 'none'; }, 500);
-            }
-        });
-        // Backup pelindung sekunder jika 'load' mengalami gangguan script luar (Batas 2.5 Detik)
-        setTimeout(() => {
-            const ldr = document.getElementById('loading-screen');
-            if(ldr && ldr.style.display !== 'none') {
-                ldr.style.opacity = '0';
-                setTimeout(() => { ldr.style.display = 'none'; }, 500);
-            }
-        }, 2500);
-
-        // Sambungkan link jangkar menu agar otomatis menutup tampilan jadwal jika pengguna kembali mengklik Profil/Program/Galeri/Download
         document.addEventListener("DOMContentLoaded", function() {
-            document.querySelectorAll('.navbar-nav .smooth-scroll').forEach(link => {
-                link.addEventListener('click', function() {
-                    const landingJadwalView = document.getElementById('landing-jadwal-view');
-                    const mainLandingView = document.getElementById('main-landing-view');
-                    if(landingJadwalView && !landingJadwalView.classList.contains('d-none')) {
-                        landingJadwalView.classList.add('d-none');
-                        mainLandingView.classList.remove('d-none');
-                        document.getElementById('nav-jadwal-link').classList.remove('active');
-                    }
-                });
-            });
+            const navJadwalTrigger = document.getElementById('nav-jadwal-trigger');
+            const cardJadwalTrigger = document.getElementById('card-jadwal-trigger');
+            const landingJadwalFrame = document.getElementById('landing-jadwal-frame');
+            const landingIframeSpinner = document.getElementById('landing-iframe-spinner');
+            
+            // Inisialisasi Bootstrap Modal
+            const jadwalModal = new bootstrap.Modal(document.getElementById('jadwalModal'));
+
+            function openJadwalInFrame() {
+                jadwalModal.show();
+                
+                // Muat URL target ke dalam frame hanya jika frame masih kosong
+                if(landingJadwalFrame.src === "about:blank" || landingJadwalFrame.src === "") {
+                    landingIframeSpinner.style.opacity = "1";
+                    landingIframeSpinner.style.display = "flex";
+                    
+                    landingJadwalFrame.src = "https://web-ari-cell.github.io/jadwal_smk/";
+                    
+                    // Sembunyikan spinner setelah 1.5 detik saat skrip target selesai me-render layout
+                    setTimeout(() => {
+                        landingIframeSpinner.style.opacity = "0";
+                        setTimeout(() => { landingIframeSpinner.style.display = "none"; }, 300);
+                    }, 1500);
+                }
+            }
+
+            // Daftarkan event klik ke pemicu navbar dan kartu program bawah
+            if(navJadwalTrigger) navJadwalTrigger.addEventListener('click', openJadwalInFrame);
+            if(cardJadwalTrigger) cardJadwalTrigger.addEventListener('click', openJadwalInFrame);
         });
     </script>
 </body>
