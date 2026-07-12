@@ -39,13 +39,12 @@
             height: 100%;
             top: 0;
             left: 0;
-            z-index: 2; /* Di atas background gradasi, di bawah teks */
-            pointer-events: none;
+            z-index: 2;
         }
 
         .hero-section .container {
             position: relative;
-            z-index: 5; /* Memastikan teks dan tombol berada di atas garis dan mudah diklik */
+            z-index: 5;
         }
 
         /* Efek Kilau Gradasi pada Teks Judul (Shine Text Effect) */
@@ -158,6 +157,38 @@
             z-index: 10;
             transition: opacity 0.3s ease;
         }
+
+        /* Navigasi Khusus di Dalam Modal Header */
+        .modal-nav {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            margin: 0;
+            padding: 0;
+        }
+        .modal-nav .nav-link-modal {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+        .modal-nav .nav-link-modal:hover {
+            color: #ffffff;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+        }
+        .modal-nav .btn-dashboard-modal {
+            background: #42A5F5;
+            color: #ffffff !important;
+            padding: 4px 15px;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(66, 165, 245, 0.3);
+        }
+        .modal-nav .btn-dashboard-modal:hover {
+            background: #64b5f6;
+            box-shadow: 0 4px 15px rgba(66, 165, 245, 0.5);
+        }
     </style>
 </head>
 <body>
@@ -166,6 +197,9 @@
     <div id="loading-screen">
         <div class="spinner-border text-primary" role="status"></div>
     </div>
+
+    <!-- PARTICLE BACKGROUND (Hero Only) -->
+    <div id="particles-js"></div>
 
     <!-- HEADER & NAVBAR -->
     <header class="sticky-top">
@@ -202,10 +236,8 @@
 
     <!-- HERO SECTION -->
     <section id="home" class="hero-section text-white d-flex align-items-center position-relative overflow-hidden">
-        <!-- PARTICLE BACKGROUND INTERAKTIF (Garis-garis Diperjelas) -->
         <div id="particles-js"></div>
 
-        <!-- Container Elemen Ornamen Melayang Kustom -->
         <div class="hero-shape-container">
             <div class="premium-floating-shape shape-fluid-1"></div>
             <div class="premium-floating-shape shape-fluid-2"></div>
@@ -262,7 +294,6 @@
                 <div class="heading-line mx-auto"></div>
             </div>
             <div class="row g-4">
-                <!-- CARD JADWAL TERINTEGRASI PADA LANDING PAGE -->
                 <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="100">
                     <div class="modern-card glass-card p-4 rounded-4 h-100 transition-all d-flex flex-column justify-content-between">
                         <div>
@@ -517,12 +548,25 @@
         </div>
     </div>
 
-    <!-- MODAL INTEGRASI JADWAL PELAJARAN DI LANDING PAGE (SANDBOXED FOR A4 PRINTING) -->
+    <!-- MODAL INTEGRASI JADWAL PELAJARAN DI LANDING PAGE (DENGAN NAVIGASI HEADER LENGKAP) -->
     <div class="modal fade modal-fullscreen-custom" id="jadwalModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-fullscreen">
             <div class="modal-content">
                 <div class="modal-header d-flex justify-content-between align-items-center">
                     <h5 class="modal-title fw-bold" style="font-family: 'Poppins';"><i class="fas fa-calendar-alt me-2"></i>Sistem Jadwal Pelajaran Terintegrasi</h5>
+                    
+                    <!-- AREA NAVIGASI MENU UTAMA TAMBAHAN -->
+                    <div class="d-none d-lg-block ms-auto me-4">
+                        <ul class="modal-nav">
+                            <li><a class="nav-link-modal" onclick="window.closeJadwalAndScroll('#home')">Home</a></li>
+                            <li><a class="nav-link-modal" onclick="window.closeJadwalAndScroll('#sambutan')">Profil</a></li>
+                            <li><a class="nav-link-modal" onclick="window.closeJadwalAndScroll('#tugas')">Program</a></li>
+                            <li><a class="nav-link-modal" onclick="window.closeJadwalAndScroll('#galeri')">Galeri</a></li>
+                            <li><a class="nav-link-modal" onclick="window.closeJadwalAndScroll('#dokumen')">Download</a></li>
+                            <li><a class="nav-link-modal btn-dashboard-modal" onclick="window.closeJadwalAndOpenDashboard()">Dashboard</a></li>
+                        </ul>
+                    </div>
+
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-0">
@@ -579,6 +623,30 @@
             if(navJadwalTrigger) navJadwalTrigger.addEventListener('click', openJadwalInFrame);
             if(cardJadwalTrigger) cardJadwalTrigger.addEventListener('click', openJadwalInFrame);
 
+            // LOGIKA GLOBAL UNTUK NAVIGASI DI DALAM MODAL HEADER
+            window.closeJadwalAndScroll = function(targetSectionId) {
+                // Tutup Modal Jadwal
+                jadwalModal.hide();
+                
+                // Berikan jeda transisi modal tertutup sebelum menggulir halaman utama
+                setTimeout(() => {
+                    const targetEl = document.querySelector(targetSectionId);
+                    if(targetEl) {
+                        targetEl.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }, 350);
+            };
+
+            window.closeJadwalAndOpenDashboard = function() {
+                jadwalModal.hide();
+                setTimeout(() => {
+                    const btnDashboardMain = document.getElementById('btn-dashboard');
+                    if(btnDashboardMain) {
+                        btnDashboardMain.click(); // Memicu modal login utama secara otomatis
+                    }
+                }, 350);
+            };
+
             // FORCE-INJECT HIGH CONTRAST CYBER MESH LINE ANIMATION
             if(typeof particlesJS !== 'undefined') {
                 particlesJS("particles-js", {
@@ -590,25 +658,25 @@
                         "color": { "value": "#ffffff" },
                         "shape": { "type": "circle" },
                         "opacity": { 
-                            "value": 0.5, /* Dinaikkan dari 0.2 agar titik bercahaya jelas */
+                            "value": 0.5, 
                             "random": false,
                             "anim": { "enable": true, "speed": 1, "opacity_min": 0.3, "sync": false }
                         },
                         "size": { 
-                            "value": 4, /* Ukuran titik diperbesar */
+                            "value": 4, 
                             "random": true,
                             "anim": { "enable": true, "speed": 2, "size_min": 1, "sync": false }
                         },
                         "line_linked": { 
                             "enable": true, 
-                            "distance": 160, /* Jangkauan tarikan garis diperluas */
+                            "distance": 160, 
                             "color": "#ffffff", 
-                            "opacity": 0.45, /* Ketajaman garis digandakan (sangat kontras) */
-                            "width": 2.5 /* Ketebalan garis dipertebal secara maksimal */
+                            "opacity": 0.45, 
+                            "width": 2.5 
                         },
                         "move": { 
                             "enable": true, 
-                            "speed": 2.5, /* Gerakan dibuat lebih dinamis dan tegas */
+                            "speed": 2.5, 
                             "direction": "none", 
                             "random": true, 
                             "straight": false, 
@@ -619,7 +687,7 @@
                     "interactivity": { 
                         "detect_on": "canvas", 
                         "events": { 
-                            "onhover": { "enable": true, "mode": "grab" }, /* Garis akan mengikuti kursor saat disentuh */
+                            "onhover": { "enable": true, "mode": "grab" }, 
                             "onclick": { "enable": true, "mode": "push" }
                         },
                         "modes": {
