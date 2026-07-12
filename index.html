@@ -5,79 +5,102 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Waka Kurikulum - Landing Page Modern</title>
     <meta name="description" content="Mewujudkan Sistem Pembelajaran Berkualitas, Adaptif, dan Berorientasi Masa Depan.">
-    <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Nunito:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Third Party CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/glightbox/3.2.0/css/glightbox.min.css" />
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
     <style>
-        /* ================= PREMIUM HERO ANIMATIONS & EFFECTS ================= */
+        /* ================= KUSTOM ANIMASI HERO MAKSIMAL & JELAS ================= */
         .hero-section {
+            /* Perubahan warna gradasi yang kontras agar gerakan animasi background terlihat jelas */
             background: linear-gradient(-45deg, #0D47A1, #1565C0, #1976D2, #42A5F5);
             background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            animation: premiumGradient 10s ease infinite;
             position: relative;
+            overflow: hidden;
+            z-index: 1;
         }
 
-        @keyframes gradientBG {
+        @keyframes premiumGradient {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
-        /* Text Gradient Effect */
+        /* Efek Kilau Gradasi pada Teks Judul (Shine Text Effect) */
         .hero-title-animate {
-            background: linear-gradient(to right, #ffffff 30%, #bbdefb 70%, #ffffff);
+            background: linear-gradient(to right, #ffffff 20%, #90caf9 40%, #ffffff 60%, #ffffff 100%);
             background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: shineText 4s linear infinite;
+            animation: shineTextEngine 4s linear infinite;
         }
 
-        @keyframes shineText {
+        @keyframes shineTextEngine {
             to { background-position: 200% center; }
         }
 
-        /* Floating Background Shapes */
-        .hero-floating-shape {
+        /* Ornamen Kaca Melayang (Glassmorphism Floating Shapes) */
+        .hero-shape-container {
             position: absolute;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 34% 66% 70% 30% / 49% 45% 55% 51%;
-            animation: fluidShape 8s ease-in-out infinite alternate;
+            inset: 0;
+            pointer-events: none;
             z-index: 1;
         }
-        .shape-hero-1 { width: 150px; height: 150px; top: 15%; left: 5%; animation-duration: 9s; }
-        .shape-hero-2 { width: 220px; height: 220px; bottom: 20%; right: 45%; animation-duration: 12s; }
-
-        @keyframes fluidShape {
-            0% { transform: translateY(0px) rotate(0deg); border-radius: 34% 66% 70% 30% / 49% 45% 55% 51%; }
-            100% { transform: translateY(-25px) rotate(15deg); border-radius: 66% 34% 30% 70% / 55% 49% 51% 45%; }
+        .premium-floating-shape {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            animation: smoothFloat 8s ease-in-out infinite alternate;
+        }
+        /* Bentuk Organik Cair 1 */
+        .shape-fluid-1 {
+            width: 140px; height: 140px;
+            top: 12%; left: 3%;
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            animation-duration: 7s;
+        }
+        /* Bentuk Organik Cair 2 */
+        .shape-fluid-2 {
+            width: 200px; height: 220px;
+            bottom: 15%; right: 46%;
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            animation-duration: 11s;
         }
 
-        /* Interactive Card Custom Hover Effects */
-        .hero-swiper-glow {
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        @keyframes smoothFloat {
+            0% { transform: translateY(0px) rotate(0deg); }
+            100% { transform: translateY(-30px) rotate(12deg) scale(1.05); }
+        }
+
+        /* Efek Hover Glow dan Bayangan Kuat Pada Frame Slider */
+        .premium-slider-shadow {
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.35) !important;
+            border: 2px solid rgba(255, 255, 255, 0.1) !important;
             transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
-        .hero-swiper-glow:hover {
-            transform: scale(1.02) rotate(0.5deg);
-            box-shadow: 0 30px 60px rgba(66, 165, 245, 0.4);
-            border-color: rgba(255, 255, 255, 0.4) !important;
+        .premium-slider-shadow:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 35px 60px rgba(66, 165, 245, 0.45) !important;
+            border-color: rgba(255, 255, 255, 0.35) !important;
         }
 
-        /* Zoom Effect On Slider Images */
-        .swiper-slide-active img {
-            animation: zoomEffect 4.5s ease-in-out forwards;
+        /* Paksa Efek Zoom Halus (Ken Burns Effect) pada Slide yang Aktif */
+        .swiper-slide-active .zoom-image-effect {
+            animation: kenBurnsZoom 4.5s ease-in-out forwards;
+        }
+        .swiper-slide .zoom-image-effect {
+            transform: scale(1);
+            transition: transform 0.8s ease;
         }
 
-        @keyframes zoomEffect {
+        @keyframes kenBurnsZoom {
             0% { transform: scale(1); }
             100% { transform: scale(1.12); }
         }
@@ -122,15 +145,12 @@
 </head>
 <body>
 
-    <!-- LOADING SCREEN -->
     <div id="loading-screen">
         <div class="spinner-border text-primary" role="status"></div>
     </div>
 
-    <!-- PARTICLE BACKGROUND (Hero Only) -->
     <div id="particles-js"></div>
 
-    <!-- HEADER & NAVBAR -->
     <header class="sticky-top">
         <nav class="navbar navbar-expand-lg glass-nav">
             <div class="container">
@@ -163,11 +183,11 @@
         </nav>
     </header>
 
-    <!-- HERO SECTION -->
     <section id="home" class="hero-section text-white d-flex align-items-center position-relative overflow-hidden">
-        <!-- Animated Fluid Shapes -->
-        <div class="hero-floating-shape shape-hero-1"></div>
-        <div class="hero-floating-shape shape-hero-2"></div>
+        <div class="hero-shape-container">
+            <div class="premium-floating-shape shape-fluid-1"></div>
+            <div class="premium-floating-shape shape-fluid-2"></div>
+        </div>
 
         <div class="container position-relative z-2">
             <div class="row align-items-center min-vh-75 py-5">
@@ -175,16 +195,16 @@
                     <h1 class="display-4 fw-bold mb-3 hero-title-animate">Membangun Pendidikan Berkualitas Melalui Kurikulum yang Adaptif</h1>
                     <p class="lead opacity-75 mb-4" data-aos="fade-up" data-aos-delay="200">Bidang Kurikulum bertanggung jawab dalam perencanaan, pelaksanaan, monitoring, evaluasi pembelajaran, penyusunan jadwal, asesmen, pengembangan perangkat ajar, hingga peningkatan mutu pendidikan.</p>
                     <div class="d-flex gap-3" data-aos="fade-up" data-aos-delay="400">
-                        <a href="#sambutan" class="btn btn-light btn-lg rounded-pill px-4 shadow-sm hover-glow transition-all">Pelajari Lebih Lanjut</a>
-                        <a href="#dokumen" class="btn btn-outline-light btn-lg rounded-pill px-4 transition-all">Download Dokumen</a>
+                        <a href="#sambutan" class="btn btn-light btn-lg rounded-pill px-4 shadow-sm hover-glow">Pelajari Lebih Lanjut</a>
+                        <a href="#dokumen" class="btn btn-outline-light btn-lg rounded-pill px-4">Download Dokumen</a>
                     </div>
                 </div>
                 <div class="col-lg-6 mt-5 mt-lg-0" data-aos="fade-left" data-aos-duration="1200" data-aos-delay="200">
-                    <div class="swiper hero-swiper rounded-4 overflow-hidden glass-card p-2 hero-swiper-glow">
+                    <div class="swiper hero-swiper rounded-4 overflow-hidden glass-card p-2 premium-slider-shadow">
                         <div class="swiper-wrapper">
-                            <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&auto=format&fit=crop&q=80" class="img-fluid rounded-4" alt="Guru mengajar di kelas modern"></div>
-                            <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&auto=format&fit=crop&q=80" class="img-fluid rounded-4" alt="Siswa belajar menggunakan laptop"></div>
-                            <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1581092921461-eab62e97a780?w=600&auto=format&fit=crop&q=80" class="img-fluid rounded-4" alt="Laboratorium komputer SMK"></div>
+                            <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&auto=format&fit=crop&q=80" class="img-fluid rounded-4 zoom-image-effect" alt="Guru mengajar di kelas modern"></div>
+                            <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&auto=format&fit=crop&q=80" class="img-fluid rounded-4 zoom-image-effect" alt="Siswa belajar menggunakan laptop"></div>
+                            <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1581092921461-eab62e97a780?w=600&auto=format&fit=crop&q=80" class="img-fluid rounded-4 zoom-image-effect" alt="Laboratorium komputer SMK"></div>
                         </div>
                     </div>
                 </div>
@@ -193,13 +213,12 @@
         <div class="wave-container"><svg viewBox="0 0 1440 120" class="wave-svg"><path d="M0,64L120,80C240,96,480,128,720,128C960,128,1200,96,1320,80L1440,64L1440,120L1320,120C1200,120,960,120,720,120C480,120,240,120,120,120L0,120Z"></path></svg></div>
     </section>
 
-    <!-- SECTION SAMBUTAN -->
     <section id="sambutan" class="py-5 section-padding bg-light-blue">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-4 text-center mb-4 mb-lg-0" data-aos="zoom-in">
                     <div class="avatar-wrapper position-relative d-inline-block">
-                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&auto=format&fit=crop&q=80" alt="Waka Kurikulum" class="rounded-circle img-fluid shadow-lg main-avatar">
+                        <img data-src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&auto=format&fit=crop&q=80" alt="Waka Kurikulum" class="rounded-circle img-fluid shadow-lg main-avatar lazy">
                         <div class="floating-shape shape-1"></div>
                     </div>
                 </div>
@@ -212,7 +231,6 @@
         </div>
     </section>
 
-    <!-- SECTION TUGAS POKOK -->
     <section id="tugas" class="py-5 section-padding">
         <div class="container">
             <div class="text-center mb-5" data-aos="fade-up">
@@ -220,7 +238,6 @@
                 <div class="heading-line mx-auto"></div>
             </div>
             <div class="row g-4">
-                <!-- CARD JADWAL TERINTEGRASI PADA LANDING PAGE -->
                 <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="100">
                     <div class="modern-card glass-card p-4 rounded-4 h-100 transition-all d-flex flex-column justify-content-between">
                         <div>
@@ -247,7 +264,6 @@
         </div>
     </section>
 
-    <!-- SECTION PROGRAM UNGGULAN -->
     <section id="program" class="py-5 section-padding bg-light-blue">
         <div class="container">
             <div class="text-center mb-5" data-aos="fade-up">
@@ -257,7 +273,7 @@
                 <div class="col-lg-4 col-md-6" data-aos="zoom-in">
                     <div class="card border-0 rounded-4 shadow-sm overflow-hidden h-100 program-card">
                         <div class="img-zoom-container">
-                            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500&auto=format&fit=crop&q=80" class="card-img-top" alt="Digital Learning">
+                            <img data-src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500&auto=format&fit=crop&q=80" class="card-img-top lazy" alt="Digital Learning">
                         </div>
                         <div class="card-body p-4">
                             <h5 class="fw-bold">Digital Learning Era</h5>
@@ -269,7 +285,6 @@
         </div>
     </section>
 
-    <!-- SECTION DATA (COUNTER) -->
     <section class="py-5 bg-gradient text-white text-center position-relative">
         <div class="container py-4">
             <div class="row g-4">
@@ -301,14 +316,13 @@
         </div>
     </section>
 
-    <!-- SECTION TIM KURIKULUM -->
     <section class="py-5 section-padding">
         <div class="container">
             <div class="text-center mb-5"><h2 class="fw-bold">Tim Kerja Kurikulum</h2></div>
             <div class="row g-4 justify-content-center">
                 <div class="col-lg-3 col-md-6 text-center" data-aos="fade-up">
                     <div class="glass-card p-4 rounded-4 hover-glow transition-all">
-                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=300&auto=format&fit=crop&q=80" class="rounded-circle img-fluid mb-3" style="width:120px;height:120px;object-fit:cover;" alt="Tim Kurikulum">
+                        <img data-src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=300&auto=format&fit=crop&q=80" class="rounded-circle img-fluid mb-3 lazy" style="width:120px;height:120px;object-fit:cover;" alt="Tim Kurikulum">
                         <h6 class="fw-bold mb-1">Budi Santoso, M.Pd</h6>
                         <p class="text-primary small mb-2">Staf Kurikulum/Data</p>
                         <div class="social-links"><a href="#" class="text-muted mx-1"><i class="fab fa-linkedin"></i></a></div>
@@ -318,7 +332,6 @@
         </div>
     </section>
 
-    <!-- SECTION GALERI -->
     <section id="galeri" class="py-5 section-padding bg-light-blue">
         <div class="container">
             <div class="text-center mb-5"><h2 class="fw-bold">Galeri Aktivitas Akademik</h2></div>
@@ -326,7 +339,7 @@
                 <div class="col-md-4 col-sm-6">
                     <a href="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800" class="glightbox">
                         <div class="overflow-hidden rounded-4 position-relative img-zoom-container shadow-sm">
-                            <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=500" class="img-fluid" alt="Workshop Guru">
+                            <img data-src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=500" class="img-fluid lazy" alt="Workshop Guru">
                         </div>
                     </a>
                 </div>
@@ -334,7 +347,6 @@
         </div>
     </section>
 
-    <!-- SECTION DOKUMEN -->
     <section id="dokumen" class="py-5 section-padding">
         <div class="container">
             <div class="text-center mb-5"><h2 class="fw-bold">Pusat Unduhan Dokumen</h2></div>
@@ -352,7 +364,6 @@
         </div>
     </section>
 
-    <!-- SECTION BERITA -->
     <section class="py-5 section-padding bg-light-blue">
         <div class="container">
             <div class="text-center mb-5"><h2 class="fw-bold">Warta & Informasi Terbaru</h2></div>
@@ -360,7 +371,7 @@
                 <div class="swiper-wrapper">
                     <div class="swiper-slide p-2">
                         <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
-                            <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=500" class="card-img-top" alt="Berita">
+                            <img data-src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=500" class="card-img-top lazy" alt="Berita">
                             <div class="card-body p-4">
                                 <h6 class="fw-bold">Implementasi Strategi Pembelajaran Deep Learning</h6>
                                 <p class="text-muted small mb-0">Akselerasi mutu pendidik dalam memanfaatkan model pembelajaran kognitif tingkat tinggi...</p>
@@ -373,7 +384,6 @@
         </div>
     </section>
 
-    <!-- SECTION TESTIMONI -->
     <section class="py-5 section-padding">
         <div class="container">
             <div class="swiper testimonial-swiper">
@@ -388,7 +398,6 @@
         </div>
     </section>
 
-    <!-- SECTION FAQ -->
     <section class="py-5 section-padding bg-light-blue">
         <div class="container">
             <div class="text-center mb-5"><h2 class="fw-bold">Frequently Asked Questions</h2></div>
@@ -407,7 +416,6 @@
         </div>
     </section>
 
-    <!-- FOOTER -->
     <footer class="bg-dark text-white pt-5 pb-3">
         <div class="container">
             <div class="row g-4 mb-4">
@@ -439,7 +447,6 @@
         </div>
     </footer>
 
-    <!-- MODAL LOGIN GLASSMORPHISM -->
     <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content glass-card border-0 rounded-4 overflow-hidden">
@@ -475,7 +482,6 @@
         </div>
     </div>
 
-    <!-- MODAL INTEGRASI JADWAL PELAJARAN DI LANDING PAGE (SANDBOXED FOR A4 PRINTING) -->
     <div class="modal fade modal-fullscreen-custom" id="jadwalModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-fullscreen">
             <div class="modal-content">
@@ -485,12 +491,10 @@
                 </div>
                 <div class="modal-body p-0">
                     <div class="iframe-wrapper">
-                        <!-- Loader internal modal -->
                         <div class="iframe-loader-landing" id="landing-iframe-spinner">
                             <div class="spinner-border text-primary mb-2" role="status"></div>
                             <span class="text-muted small fw-semibold">Memuat Jadwal Pelajaran SMK...</span>
                         </div>
-                        <!-- Frame Target Utama -->
                         <iframe id="landing-jadwal-frame" src="about:blank" sandbox="allow-forms allow-scripts allow-same-origin allow-popups allow-modals allow-downloads allow-popups-to-escape-sandbox" allow="fullscreen"></iframe>
                     </div>
                 </div>
@@ -498,10 +502,8 @@
         </div>
     </div>
 
-    <!-- BACK TO TOP BUTTON -->
     <button id="backToTop" class="btn btn-primary rounded-circle shadow-lg position-fixed" style="bottom:25px;right:25px;display:none;z-index:999;"><i class="fas fa-arrow-up"></i></button>
 
-    <!-- Scripts JavaScript Library -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
@@ -509,7 +511,6 @@
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script src="script.js"></script>
 
-    <!-- INJEKSI LOGIKA EMBED DI INDEX -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const navJadwalTrigger = document.getElementById('nav-jadwal-trigger');
